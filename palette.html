@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polaris Design System</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/lucide-react@latest/dist/umd/lucide-react.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { margin: 0; font-family: Inter, system-ui, sans-serif; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState } = React;
+        const { 
+            Check, Star, Users, BookOpen, Award, ArrowRight, Menu, X, Play, Quote, 
+            Shield, Heart, ChevronDown, Search, Bell, User, Calendar, Video, 
+            Wrench, MessageCircle, UserCheck, RefreshCw, Infinity, FileCheck 
+        } = LucideReact;
+
+        const PolarisDesignSystem = () => {
+            const [activeTab, setActiveTab] = useState('colors');
+
+            // Color Palette Data - Based on your actual CSS
+            const colorPalette = {
+                primary: [
+                    { name: 'Primary Blue', hex: '#1575e8', usage: 'Primary actions, links, buttons' },
+                    { name: 'Navy Depth', hex: '#0d468a', usage: 'Hover states, emphasis, headers' },
+                    { name: 'Light Blue', hex: '#CDE2FB', usage: 'Secondary buttons, highlights' }
+                ],
+                secondary: [
+                    { name: 'Success Green', hex: '#499c57', usage: 'Success states, progress, growth' },
+                    { name: 'Deep Forest', hex: '#139e4f', usage: 'Green hover states' },
+                    { name: 'Green Tint', hex: '#f0f9f4', usage: 'Success backgrounds' }
+                ],
+                accent: [
+                    { name: 'Warmth Amber', hex: '#ffad01', usage: 'Warnings, badges' },
+                    { name: 'Energy Orange', hex: '#fd5e02', usage: 'Urgent actions, highlights' },
+                    { name: 'Alert Red', hex: '#ed2e19', usage: 'Errors, critical alerts' }
+                ],
+                neutral: [
+                    { name: 'Text Dark', hex: '#333333', usage: 'Primary text, headers' },
+                    { name: 'Text Light', hex: '#444444', usage: 'Secondary text, body copy' },
+                    { name: 'Stone', hex: '#5f5b5a', usage: 'Muted text, placeholders' },
+                    { name: 'Cream Background', hex: '#f0ede1', usage: 'Hero sections, warm backgrounds' },
+                    { name: 'Card Background', hex: '#f9f7f3', usage: 'Card backgrounds, panels' },
+                    { name: 'White', hex: '#ffffff', usage: 'Pure backgrounds, cards' }
+                ]
+            };
+
+            const ColorSwatch = ({ color }) => (
+                <div className="bg-white rounded-lg p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div 
+                        className="w-full h-16 rounded-lg mb-3 border border-gray-200"
+                        style={{ backgroundColor: color.hex }}
+                    ></div>
+                    <h4 className="font-semibold text-gray-900 text-sm">{color.name}</h4>
+                    <p className="text-xs text-gray-600 font-mono mt-1">{color.hex}</p>
+                    <p className="text-xs text-gray-500 mt-2">{color.usage}</p>
+                </div>
+            );
+
+            const Button = ({ variant = 'primary', size = 'medium', children, icon, className = "", ...props }) => {
+                const baseClasses = "inline-flex items-center justify-center font-bold transition-all duration-300 focus:outline-none";
+                
+                const variants = {
+                    primary: "bg-blue-600 text-white hover:bg-blue-700 hover:shadow-lg rounded-full",
+                    secondary: "bg-blue-100 text-blue-600 hover:bg-green-100 hover:text-green-700 rounded-full",
+                    login: "bg-blue-600 text-white hover:bg-blue-700 rounded-full",
+                    outline: "bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 hover:border-gray-400 rounded-lg",
+                    ghost: "bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-900 rounded-lg"
+                };
+                
+                const sizes = {
+                    small: "px-3 py-2 text-sm",
+                    medium: "px-6 py-3 text-base",
+                    large: "px-8 py-4 text-lg",
+                    login: "px-4 py-2 text-sm"
+                };
+
+                return React.createElement('button', 
+                    { 
+                        className: `${baseClasses} ${variants[variant]} ${sizes[size]} ${className}`,
+                        ...props 
+                    },
+                    children,
+                    icon && React.createElement('span', { className: 'ml-2' }, icon)
+                );
+            };
+
+            const ProgressBar = ({ progress, label }) => (
+                <div className="space-y-2">
+                    {label && <div className="flex justify-between text-sm text-gray-600">
+                        <span>{label}</span>
+                        <span>{progress}%</span>
+                    </div>}
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                        <div 
+                            className="bg-gradient-to-r from-blue-600 to-blue-700 h-2 rounded-full transition-all duration-300"
+                            style={{ width: `${progress}%` }}
+                        ></div>
+                    </div>
+                </div>
+            );
+
+            const NavigationBar = () => (
+                <nav className="bg-white border-b border-gray-100 px-6 py-4">
+                    <div className="max-w-7xl mx-auto flex items-center justify-between">
+                        <div className="flex items-center space-x-8">
+                            <div className="flex items-center space-x-2">
+                                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                                    <Star className="w-5 h-5 text-white" />
+                                </div>
+                                <span className="text-xl font-bold text-gray-900">Polaris</span>
+                            </div>
+                            
+                            <div className="hidden md:flex space-x-6">
+                                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Overview</a>
+                                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Instructor</a>
+                                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">Schedule</a>
+                                <a href="#" className="text-gray-600 hover:text-blue-600 transition-colors">FAQs</a>
+                            </div>
+                        </div>
+
+                        <div className="flex items-center space-x-4">
+                            <Button variant="login" size="login">Log in</Button>
+                        </div>
+                    </div>
+                </nav>
+            );
+
+            const HeroWithCohorts = ({ title, subtitle, description, badge, cohorts }) => (
+                <section className="bg-yellow-50 py-20 px-6">
+                    <div className="max-w-6xl mx-auto">
+                        <div className="grid lg:grid-cols-2 gap-12 items-start">
+                            <div className="space-y-6">
+                                <h1 className="text-4xl font-bold text-gray-800 leading-tight">{title}</h1>
+                                <p className="text-lg font-semibold text-gray-600">{subtitle}</p>
+                                <div className="space-y-4 text-lg text-gray-600 leading-relaxed">
+                                    {description.split('\n').map((paragraph, index) => (
+                                        <p key={index}>{paragraph}</p>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-lg shadow-lg border border-gray-200">
+                                <div className="aspect-video w-full bg-gradient-to-br from-blue-600 to-blue-700 rounded-t-lg flex items-center justify-center p-4">
+                                    <img src={badge} alt="Course Badge" className="max-h-32 w-auto" />
+                                </div>
+                                
+                                <div className="p-6">
+                                    <h3 className="text-xl font-semibold text-center mb-6">Upcoming Cohorts</h3>
+                                    <div className="space-y-4">
+                                        {cohorts.map((cohort, index) => (
+                                            <div key={index} className="flex justify-between items-center p-4 border-b border-gray-200 last:border-b-0">
+                                                <div>
+                                                    <div className="font-semibold text-gray-800">{cohort.dates}</div>
+                                                    <div className="text-sm bg-red-100 text-red-700 px-2 py-1 rounded mt-1 inline-block">
+                                                        {cohort.status}
+                                                    </div>
+                                                </div>
+                                                <Button variant={cohort.status.includes('CLOSED') ? 'outline' : 'primary'} size="small">
+                                                    {cohort.status.includes('CLOSED') ? 'Closed' : 'Enroll'}
+                                                </Button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            );
+
+            const TabNavigation = () => (
+                <div className="border-b border-gray-200 mb-8">
+                    <nav className="flex space-x-8">
+                        {[
+                            { id: 'colors', label: 'Colors' },
+                            { id: 'typography', label: 'Typography' },
+                            { id: 'components', label: 'Components' },
+                            { id: 'navigation', label: 'Navigation' }
+                        ].map(tab => (
+                            <button
+                                key={tab.id}
+                                onClick={() => setActiveTab(tab.id)}
+                                className={`py-4 px-2 border-b-2 font-medium text-sm transition-colors ${
+                                    activeTab === tab.id 
+                                        ? 'border-blue-600 text-blue-600' 
+                                        : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                }`}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </nav>
+                </div>
+            );
+
+            return (
+                <div className="min-h-screen bg-gray-50">
+                    <div className="bg-white border-b border-gray-200 px-6 py-4">
+                        <div className="max-w-7xl mx-auto">
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center space-x-3">
+                                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                                        <Star className="w-6 h-6 text-white" />
+                                    </div>
+                                    <div>
+                                        <h1 className="text-2xl font-bold text-gray-900">Polaris Design System</h1>
+                                        <p className="text-sm text-gray-600">Your Actual Components & Styles</p>
+                                    </div>
+                                </div>
+                                <div className="text-sm text-gray-500">
+                                    Interactive Component Library
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-7xl mx-auto px-6 py-8">
+                        <TabNavigation />
+
+                        {activeTab === 'colors' && (
+                            <div className="space-y-8">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Color Palette</h2>
+                                    
+                                    {Object.entries(colorPalette).map(([category, colors]) => (
+                                        <div key={category} className="mb-8">
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4 capitalize">{category} Colors</h3>
+                                            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                                                {colors.map((color, index) => (
+                                                    <ColorSwatch key={index} color={color} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'typography' && (
+                            <div className="space-y-8">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Typography System</h2>
+                                    <p className="text-gray-600 mb-8">Based on your existing CSS with responsive clamp() scaling and Inter font family.</p>
+                                    
+                                    <div className="space-y-8">
+                                        <div className="bg-white rounded-xl p-8 border border-gray-100">
+                                            <h1 style={{ fontSize: 'clamp(32px, 4vw, 48px)', fontWeight: 'bold', color: '#333', lineHeight: '1.2' }}>
+                                                Hero Title (Your Actual Scale)
+                                            </h1>
+                                            <p className="text-gray-600 mt-2">clamp(32px, 4vw, 48px) / Bold / #333</p>
+                                        </div>
+                                        
+                                        <div className="bg-white rounded-xl p-8 border border-gray-100">
+                                            <h2 style={{ fontSize: 'clamp(24px, 2vw, 32px)', fontWeight: 'bold', color: '#333' }}>
+                                                Section Title (Your Pattern)
+                                            </h2>
+                                            <p className="text-gray-600 mt-2">clamp(24px, 2vw, 32px) / Bold / #333</p>
+                                        </div>
+                                        
+                                        <div className="bg-white rounded-xl p-8 border border-gray-100">
+                                            <p style={{ fontSize: '18px', color: '#444', lineHeight: '1.5' }}>
+                                                Large body text for hero descriptions and important content. This uses 18px with #444 color for better readability and emphasis.
+                                            </p>
+                                            <p className="text-gray-600 mt-2">18px / Regular / #444 / line-height: 1.5</p>
+                                        </div>
+                                        
+                                        <div className="bg-white rounded-xl p-8 border border-gray-100">
+                                            <p style={{ fontSize: 'clamp(14px, 1.6vw, 16px)', color: '#444', lineHeight: '1.6' }}>
+                                                Standard body text using responsive scaling. This is the primary text size used throughout your landing pages with proper contrast and readability.
+                                            </p>
+                                            <p className="text-gray-600 mt-2">clamp(14px, 1.6vw, 16px) / Regular / #444 / line-height: 1.6</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'components' && (
+                            <div className="space-y-8">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Landing Page Components</h2>
+                                    
+                                    <div className="space-y-12">
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Buttons (Your Actual Styles)</h3>
+                                            <div className="bg-white rounded-xl p-8 border border-gray-100">
+                                                <div className="flex flex-wrap gap-4">
+                                                    <Button variant="primary" size="medium">Primary Button</Button>
+                                                    <Button variant="secondary" size="medium">Secondary Button</Button>
+                                                    <Button variant="login" size="login">Log in</Button>
+                                                    <Button variant="outline" size="medium">Outline Button</Button>
+                                                    <Button variant="primary" size="small">Enroll</Button>
+                                                    <Button variant="primary" size="large">Get Started</Button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Progress Indicators</h3>
+                                            <div className="bg-white rounded-xl p-8 border border-gray-100 space-y-6">
+                                                <ProgressBar progress={25} label="Getting Started" />
+                                                <ProgressBar progress={60} label="Building Skills" />
+                                                <ProgressBar progress={85} label="Advanced Practice" />
+                                                <ProgressBar progress={100} label="Mastery" />
+                                            </div>
+                                        </div>
+
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Hero Section with Cohorts</h3>
+                                            <div className="border border-gray-200 rounded-xl overflow-hidden">
+                                                <HeroWithCohorts 
+                                                    title="Core Peer Recovery Specialist Certification Training"
+                                                    subtitle="🕑 24 Hours | 🧑‍💻 Online Cohort-based | 📅 2 weeks"
+                                                    description="This 2-week cohort-based training gives behavioral health supervisors the tools, skills, and mindset to lead Peer Recovery Support Specialists with clarity and confidence.
+
+Join a collaborative program built around nationally recognized supervisor competencies."
+                                                    badge="https://portal.polarispathways.com/file/156925c6888555f2bfc73de442bea9d8/c98c1c0b-15c8-4276-81fc-c96f051c0e4e/CSPS+Badge.png"
+                                                    cohorts={[
+                                                        { dates: 'Mar 3 — Apr 21, 2025', status: 'ENROLLMENT CLOSED' },
+                                                        { dates: 'May 5 — June 23, 2025', status: 'Enrollment Ends May 1st' },
+                                                        { dates: 'Aug 4 — Sept 22, 2025', status: 'Enrollment Ends Aug 1st' }
+                                                    ]}
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {activeTab === 'navigation' && (
+                            <div className="space-y-8">
+                                <div>
+                                    <h2 className="text-2xl font-bold text-gray-900 mb-6">Navigation Components</h2>
+                                    
+                                    <div className="space-y-6">
+                                        <div>
+                                            <h3 className="text-lg font-semibold text-gray-800 mb-4">Main Navigation</h3>
+                                            <div className="border border-gray-200 rounded-xl overflow-hidden">
+                                                <NavigationBar />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<PolarisDesignSystem />, document.getElementById('root'));
+    </script>
+</body>
+</html>
